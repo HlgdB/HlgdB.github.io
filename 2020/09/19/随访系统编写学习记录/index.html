@@ -20,28 +20,33 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="React代码学习一. 一般界面中如果有通过如面包屑这种组件进行导航的，但是页面路由并没有切换的，可以通过将组件分别用tsx文件写好，然后在index中导入，构造一个对象，将每一个面包屑对应的组件在这个对象中一一写好并且和key对应起来，像这样 12345678const contentListNoTitle &#x3D; &amp;#123;    BaseInfo: &lt;BaseInfoContent pi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="随访系统编写学习记录">
+<meta property="og:url" content="http://example.com/2020/09/19/%E9%9A%8F%E8%AE%BF%E7%B3%BB%E7%BB%9F%E7%BC%96%E5%86%99%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="React代码学习一. 一般界面中如果有通过如面包屑这种组件进行导航的，但是页面路由并没有切换的，可以通过将组件分别用tsx文件写好，然后在index中导入，构造一个对象，将每一个面包屑对应的组件在这个对象中一一写好并且和key对应起来，像这样 12345678const contentListNoTitle &#x3D; &amp;#123;    BaseInfo: &lt;BaseInfoContent pi">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-09-19T14:59:05.000Z">
+<meta property="article:modified_time" content="2020-09-19T15:47:58.021Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="react学习">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2020/09/19/%E9%9A%8F%E8%AE%BF%E7%B3%BB%E7%BB%9F%E7%BC%96%E5%86%99%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Hexo</title>
+  <title>随访系统编写学习记录 | Hexo</title>
   
 
 
@@ -139,9 +144,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
@@ -157,10 +163,9 @@
       <meta itemprop="name" content="Hexo">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/19/%E9%9A%8F%E8%AE%BF%E7%B3%BB%E7%BB%9F%E7%BC%96%E5%86%99%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" class="post-title-link" itemprop="url">随访系统编写学习记录</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          随访系统编写学习记录
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -184,7 +189,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="React代码学习"><a href="#React代码学习" class="headerlink" title="React代码学习"></a>React代码学习</h1><p>一. 一般界面中如果有通过如面包屑这种组件进行导航的，但是页面路由并没有切换的，可以通过将组件分别用tsx文件写好，然后在index中导入，构造一个对象，将每一个面包屑对应的组件在这个对象中一一写好并且和key对应起来，像这样</p>
+        <h1 id="React代码学习"><a href="#React代码学习" class="headerlink" title="React代码学习"></a>React代码学习</h1><p>一. 一般界面中如果有通过如面包屑这种组件进行导航的，但是页面路由并没有切换的，可以通过将组件分别用tsx文件写好，然后在index中导入，构造一个对象，将每一个面包屑对应的组件在这个对象中一一写好并且和key对应起来，像这样</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> contentListNoTitle = &#123;</span><br><span class="line">    BaseInfo: <span class="xml"><span class="tag">&lt;<span class="name">BaseInfoContent</span> <span class="attr">pid</span>=<span class="string">&#123;pid&#125;</span> /&gt;</span></span>,</span><br><span class="line">    PastMedicalHistory: <span class="xml"><span class="tag">&lt;<span class="name">PastMedicalHistory</span> <span class="attr">pid</span>=<span class="string">&#123;pid&#125;</span> /&gt;</span></span>,</span><br><span class="line">    OtherExamContent: <span class="xml"><span class="tag">&lt;<span class="name">OtherExamContent</span> <span class="attr">pid</span>=<span class="string">&#123;pid&#125;</span> <span class="attr">treNum</span>=<span class="string">&#123;0&#125;</span> /&gt;</span></span>,</span><br><span class="line">    LaboratoryExamContent: <span class="xml"><span class="tag">&lt;<span class="name">LaboratoryExamContent</span> <span class="attr">pid</span>=<span class="string">&#123;pid&#125;</span> <span class="attr">treNum</span>=<span class="string">&#123;0&#125;</span> /&gt;</span></span>,</span><br><span class="line">    ImmunohistochemistryContent: <span class="xml"><span class="tag">&lt;<span class="name">ImmunohistochemistryContent</span> <span class="attr">pid</span>=<span class="string">&#123;pid&#125;</span> <span class="attr">treNum</span>=<span class="string">&#123;0&#125;</span> /&gt;</span></span>,</span><br><span class="line">    MolecularTestContent: <span class="xml"><span class="tag">&lt;<span class="name">MolecularTestContent</span> <span class="attr">pid</span>=<span class="string">&#123;pid&#125;</span> <span class="attr">treNum</span>=<span class="string">&#123;0&#125;</span> /&gt;</span></span></span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure>
 
 <p>然后在return中<code>&#123;contentListNoTitle[key]&#125;</code>这样写上去，就可以通过切换key来切换页面中的某个组件但是不用切换路由。react一定要有面向对象的思想，把页面中的各部分看成组件，某些很类似的组件可以把不同点抽离出来作为参数，然后写好组件后将参数作为props传入组件内部，实现一个组件重复使用。</p>
@@ -215,162 +220,33 @@
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">ALK: 1</span><br><span class="line">BIM: 2</span><br><span class="line">BIMDesc: &quot;123&quot;</span><br><span class="line">BIMSam: &quot;123&quot;</span><br><span class="line">BIMTestMed: 2</span><br><span class="line">BRAF: 0</span><br><span class="line">EGFR: 1</span><br><span class="line">HER_2: 1</span><br><span class="line">KRAS: 0</span><br><span class="line">MSI: 1</span><br><span class="line">PD-L1: 10</span><br><span class="line">PIK3CA: 1</span><br><span class="line">RET: 0</span><br><span class="line">ROS1: 0</span><br><span class="line">TMB_num: 4</span><br><span class="line">UGT1A1: 2</span><br><span class="line">UGT1A1Desc: &quot;111&quot;</span><br><span class="line">UGT1A1Sam: &quot;111&quot;</span><br><span class="line">UGT1A1TestMed: 1</span><br><span class="line">antibody: &quot;321抗体&quot;</span><br><span class="line">cMET: 1</span><br><span class="line">uplaod: undefined</span><br></pre></td></tr></table></figure>
 
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/react%E5%AD%A6%E4%B9%A0/" rel="tag"># react学习</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/09/14/css-animations%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/">
+        
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/14/css-animations%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" class="post-title-link" itemprop="url">css animations使用记录</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-14 23:15:08" itemprop="dateCreated datePublished" datetime="2020-09-14T23:15:08+08:00">2020-09-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-15 22:25:46" itemprop="dateModified" datetime="2020-09-15T22:25:46+08:00">2020-09-15</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">.loginDiv &#123;</span><br><span class="line">    width: 500px;</span><br><span class="line">    height: 300px;</span><br><span class="line">    padding: 10px 10px;</span><br><span class="line">    padding-top: 180px;</span><br><span class="line">    animation: down 1.2s;</span><br><span class="line">    -webkit-animation: down 1.2s; &#x2F;* Safari 与 Chrome *&#x2F;</span><br><span class="line">    -moz-animation: down 1.2s;  &#x2F;*  Firefox *&#x2F;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@keyframes down</span><br><span class="line">&#123;</span><br><span class="line">    from   &#123;padding-top: 10px;&#125;</span><br><span class="line">    to  &#123;padding-top: 180px;&#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">@-webkit-keyframes down &#x2F;* Safari 与 Chrome *&#x2F;</span><br><span class="line">&#123;</span><br><span class="line">    from   &#123;padding-top: 10px;&#125;</span><br><span class="line">    to  &#123;padding-top: 180px;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@-moz-keyframes down</span><br><span class="line">&#123;</span><br><span class="line">    from   &#123;padding-top: 10px;&#125;</span><br><span class="line">    to  &#123;padding-top: 180px;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>animation后跟随两个参数，第一个参数代表动画绘制函数（姑且这么理解）的名字，比如这里就是 <strong>down</strong>，然后第二个参数就是动画完成的时间。</p>
-<p> -webkit-是safari和chrome的兼容，-moz-是火狐的兼容，还有一个-o-这里省略掉了。</p>
-<p>然后是 <code>@keyframe</code> ，后面跟函数名字，大括号里面可以写 <strong>from</strong> ，<strong>to</strong> 也可以写关键帧比如 25%，50%，75%，100%，等等。然后接下来的大括号里写开始结束或者关键帧时的变化的css属性。</p>
-<p>animation和用起来比transition方便很多，transition和transform还没太搞明白，光是animation就还有许多属性可以用，但是这个用来制作一些动画属实简单便捷。</p>
-<p> <strong>有一个必须要注意的地方，不加其他属性就像我这样写的话，动画结束后，css元素的属性会回到原来指定的状态，比如我指定了 <code>.loginDiv</code>的padding-top是180px，虽然从10px开始动画到180px结束，最后会停在padding-top是180px是因为我一开始就指定了，不指定的话会回到初始状态一般。</strong></p>
-
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/14/css-animations%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" rel="prev" title="css animations使用记录">
+      <i class="fa fa-chevron-left"></i> css animations使用记录
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/09/13/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/13/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-13 22:36:35" itemprop="dateCreated datePublished" datetime="2020-09-13T22:36:35+08:00">2020-09-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
@@ -423,6 +299,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#React%E4%BB%A3%E7%A0%81%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">React代码学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Antd%E7%BB%84%E4%BB%B6%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.</span> <span class="nav-text">Antd组件学习</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
