@@ -145,6 +145,83 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/19/umi%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%BE%AE%E7%94%9F%E7%89%A9%E9%A1%B9%E7%9B%AE%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="HlgdB">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/19/umi%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%BE%AE%E7%94%9F%E7%89%A9%E9%A1%B9%E7%9B%AE%EF%BC%89/" class="post-title-link" itemprop="url">umi学习笔记（微生物项目）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-19 21:23:19 / Modified: 22:30:18" itemprop="dateCreated datePublished" datetime="2021-01-19T21:23:19+08:00">2021-01-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="踩坑-总结"><a href="#踩坑-总结" class="headerlink" title="踩坑+总结"></a>踩坑+总结</h1><p>今儿碰到一个umi里面的关于dva的坑，写好一个页面组件的props后，用connect绑定这个页面组件和它的props的时候，比如现在有一个BasicLayouts组件和它的mapStateToProps时，一定要把props放前面，组件放后面</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> connect(mapStateToProps)(BasicLayouts);</span><br></pre></td></tr></table></figure>
+
+<p>因为connect连接的顺序决定了获得的参数props有些什么，其实这个坑也帮助我进一步理解了dva的使用，我以前经常纠结于到底是一个组件绑定一个model，又或者是一对多，又或者是多对一。然后我发现其实没有什么这种强制的对应的，在你的mapStateToProps里面，只要你把它写到connect的第一个参数上，它就可以获得所有model的数据。</p>
+<p>每一个model可以理解为一个数据仓库，这里回顾一下umi认定的model文件：</p>
+<blockquote>
+<p>pages页面下的model文件以及src文件夹的models文件夹下的所有文件，文件指的是js和ts</p>
+</blockquote>
+<p>model的namespace就是他的唯一标识，也就是他在props里的名字，他定义中的state就是你在props获取到的以他的namespace为名的object的键，而值则是通过reducer中的函数来实现定义也只能由reducer来处理，这也就是dva数据传输单向性的确保手段。</p>
+<p>这样下来理解dva就很轻松了，model文件是一个个唯一数据仓库，定义了一个个具有唯一名称的全局object。怎么实现唯一名称的呢？通过model定义里的namespace，这个namespace就是这个全局object的名称。怎么实现object型数据的呢，通过state，state中定义了这个全局object的所有键，所以叫state，就是这个model的状态。怎么传输数据到model呢，通过model中的effect，effect中的函数的前一个参数包含了{ payload }，payload就是从页面传来的数据，后一个参数有{ put, call }，put用于调用同是model中的effect或者reducer，call用于调用service中的函数来调用接口获取数据或者增删改除。怎么改变state呢，通过使用reducer，reducer可以return对象数据，当这个对象的键和state某一个同名，相当于就修改了state了，也就修改了仓库中的数据。最后就是subscription，订阅，订阅其实很简单，就是一个作用（我的理解），当model检测到路由发生变化时，如果进入到了某个页面，就执行一系列操作。</p>
+<p>定义好了一个个model后，当你把一个函数放到connect的第一个括号中时，他的props中就包含了所有的model定义的全局object，选择一些需要的进行return。这里有一个值得注意的对象loding，loading.effects[…]包含了所有model的effect的执行状态，常常可以用他来进行一些页面中loading状态的处理。当你把需要的数据return出来后，connect的第二个括号中的数据就可以在他的props里获取到这些第一个括号中return出来的数据了，以及一些dispatch，history这些常用函数。这个就是mvvm的实现，绑定了页面与数据，而不是我原来理解的绑定了一个页面与一个model（虽然大部分情况下确实是这样。</p>
+<p>下面一个比较典型的model例子用来帮助记忆理解：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Effect, Reducer, Subscription &#125; <span class="keyword">from</span> <span class="string">&#x27;umi&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; getUserInfo &#125; <span class="keyword">from</span> <span class="string">&#x27;../pages/service&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> IndexModelType &#123;</span><br><span class="line">  <span class="keyword">namespace</span>: <span class="string">&#x27;global&#x27;</span>;</span><br><span class="line">  state: <span class="built_in">any</span>;</span><br><span class="line">  effects: &#123;</span><br><span class="line">    setPics: Effect;</span><br><span class="line">    getUserInfo: Effect;</span><br><span class="line">  &#125;;</span><br><span class="line">  reducers: &#123;</span><br><span class="line">    save: Reducer;</span><br><span class="line">  &#125;;</span><br><span class="line">  subscriptions: &#123; setup: Subscription &#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> IndexModel: IndexModelType = &#123;</span><br><span class="line">  <span class="keyword">namespace</span>: <span class="string">&#x27;global&#x27;</span>,</span><br><span class="line">  state: &#123;</span><br><span class="line">    pics: [],</span><br><span class="line">    userInfo: <span class="literal">undefined</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  effects: &#123;</span><br><span class="line">    *setPics(&#123; payload &#125;, &#123; put &#125;) &#123;</span><br><span class="line">      <span class="keyword">const</span> arr = [];</span><br><span class="line">      arr.push(payload);</span><br><span class="line">      <span class="keyword">yield</span> put(&#123;</span><br><span class="line">        <span class="keyword">type</span>: <span class="string">&#x27;save&#x27;</span>,</span><br><span class="line">        payload: &#123; pics: arr &#125;,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">    *getUserInfo(action, &#123; put, call &#125;) &#123;</span><br><span class="line">      <span class="keyword">const</span> data = <span class="keyword">yield</span> call(getUserInfo);</span><br><span class="line">      <span class="keyword">yield</span> put(&#123;</span><br><span class="line">        <span class="keyword">type</span>: <span class="string">&#x27;save&#x27;</span>,</span><br><span class="line">        payload: &#123; userInfo: data &#125;,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  reducers: &#123;</span><br><span class="line">    save(state, &#123; payload &#125;) &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123; ...state, ...payload &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  subscriptions: &#123;</span><br><span class="line">    setup(&#123; dispatch, history &#125;) &#123;</span><br><span class="line">      <span class="keyword">return</span> history.listen(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        dispatch(&#123;</span><br><span class="line">          <span class="keyword">type</span>: <span class="string">&#x27;getUserInfo&#x27;</span>,</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> IndexModel;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>以上是通过踩坑对dva的总结和理解。</p>
+<h1 id="遇到一个有趣的bug"><a href="#遇到一个有趣的bug" class="headerlink" title="遇到一个有趣的bug"></a>遇到一个有趣的bug</h1><p>如果你用pathname来设置Menu的参数defaultSelectedKeys，对了记得keys结尾的参数都是数组，那当你使用Link页面跳转的时候，Menu的所选择项会跟着改变，但是当你用history进行跳转，它就不会改变。</p>
+<p>而使用selectedKeys参数来设置就不会出现这种情况。</p>
+<h1 id="以前遇到的一个忘记记录的bug"><a href="#以前遇到的一个忘记记录的bug" class="headerlink" title="以前遇到的一个忘记记录的bug"></a>以前遇到的一个忘记记录的bug</h1><p>不能在useEffect的第一个函数参数中写useState的改变state函数然后又在第二个数组参数中写props中的model数据，如果这两个数据是存在相互影响关系并且你在第一个函数中没有加任何限制条件的话这个useEffect的函数参数会陷入死循环执行状态。</p>
+<p>继续学习，道阻且长。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2020/09/19/%E9%9A%8F%E8%AE%BF%E7%B3%BB%E7%BB%9F%E7%BC%96%E5%86%99%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -436,7 +513,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
