@@ -160,6 +160,82 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/20/canvas-video%E5%AE%9E%E7%8E%B0%E8%A7%86%E9%A2%91%E6%88%AA%E5%9B%BE%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="HlgdB">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/20/canvas-video%E5%AE%9E%E7%8E%B0%E8%A7%86%E9%A2%91%E6%88%AA%E5%9B%BE%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">canvas+video实现视频截图总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-20 18:00:22 / Modified: 18:21:04" itemprop="dateCreated datePublished" datetime="2021-01-20T18:00:22+08:00">2021-01-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="昨天在写博客上传的时候碰到个坑，简单记录一下"><a href="#昨天在写博客上传的时候碰到个坑，简单记录一下" class="headerlink" title="昨天在写博客上传的时候碰到个坑，简单记录一下"></a>昨天在写博客上传的时候碰到个坑，简单记录一下</h1><p>博客的头部信息要严格按照yaml格式书写，也就是</p>
+<blockquote>
+<p>xxx: xxxx</p>
+</blockquote>
+<p>这种格式，冒号后面一定要空一格，不然hexo g就会报错。</p>
+<h1 id="canvas-video实现纯前端视频截图"><a href="#canvas-video实现纯前端视频截图" class="headerlink" title="canvas+video实现纯前端视频截图"></a>canvas+video实现纯前端视频截图</h1><p>首先是实现的思路，肯定在播放视频的是有办法获取到视频当前帧的数据的，如果能想办法把当前帧的数据转存为base64，然后在将这个数据作为img组件的src属性，就实现了截图。这个时候就要用到canvas，html5的绘图组件。</p>
+<p>先用DOM获取到video组件，然后同样用DOM新建一个canvas组件，使用canvas的函数getContext以及drawImage设置它的上下文如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">canvas.getContext(<span class="string">&#x27;2d&#x27;</span>)?.drawImage(video, <span class="number">0</span>, <span class="number">0</span>, canvas.width, canvas.height);</span><br></pre></td></tr></table></figure>
+
+<p>这里的5个参数代表的信息就显而易见，第一个肯定是图片信息，这里的video就是刚刚用DOM获取到的video组件，后两个参数应该是左上角位置，然后就是宽和高。绘制好了canvas后，我们只需要图片不需要用canva的话，使用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">canvas.toDataURL(<span class="string">&#x27;image/png&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>把刚刚获取到的帧信息转换为base64信息。我是用的umi+dva，所以我把这个数据就存为这个页面绑定的一个model里的state中的数组中的元素，这个数组暂且叫它screenShots，然后再在页面中使用List将所有截图展示出来，所有截图的base64数据都一一存到screenShots里面了，后面就很简单了，还有就是图片的实际大小不是你展示的img大小，而是你用canvas存数据时设置的那个宽高。</p>
+<p>页面组件的源代码记录一下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Breadcrumb, Button, Input, List &#125; <span class="keyword">from</span> <span class="string">&#x27;antd&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> React, &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">&#x27;umi&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> url = <span class="string">&#x27;http://vjs.zencdn.net/v/oceans.mp4&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> scale = <span class="number">0.3</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Index = <span class="function">(<span class="params">props: any</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; videoTool, dispatch &#125; = props;</span><br><span class="line"></span><br><span class="line">  useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(videoTool);</span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;&#125;;</span><br><span class="line">  &#125;, [videoTool]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> captureImage = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> video = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;video&#x27;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> canvas = <span class="built_in">document</span>.createElement(<span class="string">&#x27;canvas&#x27;</span>);</span><br><span class="line">    canvas.width = <span class="number">640</span> * scale;</span><br><span class="line">    canvas.height = <span class="number">300</span> * scale;</span><br><span class="line">    canvas.getContext(<span class="string">&#x27;2d&#x27;</span>)?.drawImage(video, <span class="number">0</span>, <span class="number">0</span>, canvas.width, canvas.height);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> shotsArr = videoTool.screenShots;</span><br><span class="line">    shotsArr.push(canvas.toDataURL(<span class="string">&#x27;image/png&#x27;</span>));</span><br><span class="line"></span><br><span class="line">    dispatch(&#123;</span><br><span class="line">      type: <span class="string">&#x27;videoTool/setScreenshots&#x27;</span>,</span><br><span class="line">      payload: shotsArr,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div style=&#123;&#123; <span class="attr">width</span>: <span class="string">&#x27;100%&#x27;</span>, <span class="attr">padding</span>: <span class="number">20</span> &#125;&#125;&gt;</span><br><span class="line">      &lt;Breadcrumb style=&#123;&#123; <span class="attr">margin</span>: <span class="string">&#x27;16px 0&#x27;</span> &#125;&#125;&gt;</span><br><span class="line">        &lt;Breadcrumb.Item&gt;活体检测&lt;/Breadcrumb.Item&gt;</span><br><span class="line">        &lt;Breadcrumb.Item&gt;视频工具&lt;/Breadcrumb.Item&gt;</span><br><span class="line">      &lt;/Breadcrumb&gt;</span><br><span class="line">      &lt;div</span><br><span class="line">        id=<span class="string">&quot;header-nav&quot;</span></span><br><span class="line">        style=&#123;&#123;</span><br><span class="line">          padding: <span class="number">12</span>,</span><br><span class="line">          <span class="comment">// width: 800,</span></span><br><span class="line">          border: <span class="string">&#x27;1px solid #d9d9d9&#x27;</span>,</span><br><span class="line">          marginBottom: <span class="number">10</span>,</span><br><span class="line">          backgroundColor: <span class="string">&#x27;white&#x27;</span>,</span><br><span class="line">        &#125;&#125;</span><br><span class="line">      &gt;</span><br><span class="line">        &lt;Button type=<span class="string">&quot;primary&quot;</span> onClick=&#123;captureImage&#125;&gt;</span><br><span class="line">          截图</span><br><span class="line">        &lt;/Button&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">      &lt;div style=&#123;&#123; <span class="attr">width</span>: <span class="number">640</span>, <span class="attr">height</span>: <span class="number">300</span> &#125;&#125;&gt;</span><br><span class="line">        &lt;video id=<span class="string">&quot;video&quot;</span> controls=&#123;<span class="literal">true</span>&#125; crossOrigin=<span class="string">&quot;anonymous&quot;</span> width=<span class="string">&quot;100%&quot;</span>&gt;</span><br><span class="line">          &lt;source src=&#123;url&#125; /&gt;</span><br><span class="line">        &lt;/video&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line"></span><br><span class="line">      &lt;div id=<span class="string">&quot;output&quot;</span>&gt;&lt;/div&gt;</span><br><span class="line">      &lt;div style=&#123;&#123; <span class="attr">width</span>: <span class="number">700</span> &#125;&#125;&gt;</span><br><span class="line">        &lt;List</span><br><span class="line">          bordered</span><br><span class="line">          split</span><br><span class="line">          header=&#123;<span class="xml"><span class="tag">&lt;<span class="name">span</span>&gt;</span>全部截图<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span>&#125;</span><br><span class="line">          dataSource=&#123;videoTool?.screenShots&#125;</span><br><span class="line">          <span class="comment">// pagination=&#123;&#123;pageSize: 3&#125;&#125;</span></span><br><span class="line">          renderItem=&#123;<span class="function">(<span class="params">record: any, index: any</span>) =&gt;</span> (</span><br><span class="line">            &lt;List.Item&gt;</span><br><span class="line">              &lt;div&gt;&#123;index + <span class="number">1</span>&#125;&lt;/div&gt;</span><br><span class="line">              &lt;img src=&#123;record&#125; height=&#123;<span class="number">300</span> * scale&#125; width=&#123;<span class="number">640</span> * scale&#125; /&gt;</span><br><span class="line">              &lt;Input style=&#123;&#123; <span class="attr">width</span>: <span class="number">300</span> &#125;&#125;&gt;&lt;/Input&gt;</span><br><span class="line">              &lt;Button</span><br><span class="line">                type=<span class="string">&quot;primary&quot;</span></span><br><span class="line">                onClick=&#123;<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                  <span class="built_in">console</span>.log(<span class="string">&#x27;index&#x27;</span>, index);</span><br><span class="line">                  <span class="keyword">const</span> arr = videoTool.screenShots.filter(</span><br><span class="line">                    (item: any) =&gt; item !== videoTool.screenShots[index],</span><br><span class="line">                  );</span><br><span class="line">                  dispatch(&#123;</span><br><span class="line">                    type: <span class="string">&#x27;videoTool/setScreenshots&#x27;</span>,</span><br><span class="line">                    payload: arr,</span><br><span class="line">                  &#125;);</span><br><span class="line">                &#125;&#125;</span><br><span class="line">              &gt;</span><br><span class="line">                删除</span><br><span class="line">              &lt;/Button&gt;</span><br><span class="line">            &lt;/List.Item&gt;</span><br><span class="line">          )&#125;</span><br><span class="line">        /&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapStateToProps = <span class="function">(<span class="params">&#123; videoTool &#125;: &#123; videoTool: any &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    videoTool,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> connect(mapStateToProps)(Index);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>最后实现的demo效果：</p>
+<p>![ccc](C:\Users\hurenbing\Pictures\Camera Roll\ccc.png)</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/19/umi%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%BE%AE%E7%94%9F%E7%89%A9%E9%A1%B9%E7%9B%AE%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -528,12 +604,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
