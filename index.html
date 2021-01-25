@@ -160,6 +160,99 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/25/%E8%AE%B0%E5%BD%95%E4%B8%80%E4%B8%8B%E5%B8%AE%E5%A6%B9%E5%A6%B9%E5%86%99%E7%9A%84%E4%B8%80%E4%B8%AA%E5%AF%92%E5%81%87%E4%BD%9C%E4%B8%9A%E5%B0%8F%E7%BD%91%E9%A1%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="HlgdB">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/25/%E8%AE%B0%E5%BD%95%E4%B8%80%E4%B8%8B%E5%B8%AE%E5%A6%B9%E5%A6%B9%E5%86%99%E7%9A%84%E4%B8%80%E4%B8%AA%E5%AF%92%E5%81%87%E4%BD%9C%E4%B8%9A%E5%B0%8F%E7%BD%91%E9%A1%B5/" class="post-title-link" itemprop="url">记录一下帮妹妹写的一个寒假作业小网页</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-25 13:58:33 / Modified: 14:32:33" itemprop="dateCreated datePublished" datetime="2021-01-25T13:58:33+08:00">2021-01-25</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前因"><a href="#前因" class="headerlink" title="前因"></a>前因</h2><p>妹妹在念小学二年级，她老师布置了一个寒假作业，要求他们每天要写10个100以内的加减法和5个九九乘除法题目，然后题目自己任意出。妹妹让我帮她每天出题，我就想着给她弄个小网页每天自己上去做题，同时自己也学习一下一些前端知识。</p>
+<p>网址：<a target="_blank" rel="noopener" href="http://47.97.152.219:2200/">http://47.97.152.219:2200/</a></p>
+<h1 id="响应式设计"><a href="#响应式设计" class="headerlink" title="响应式设计"></a>响应式设计</h1><p>每个题目我用antd的List加Card组件来包裹，因为小孩子肯定手机用的多一些，所以肯定需要做好响应式设计，然后这个响应式也比较简单，我就想着正好学习一些antd的响应式设计。</p>
+<h2 id="Grid响应式设计"><a href="#Grid响应式设计" class="headerlink" title="Grid响应式设计"></a>Grid响应式设计</h2><p>antd的栅格组件包括了Row行，和Col列。一般来说每一行Row是分为24个单位，而Col的span属性就是确定这一列在一行的24个单位中可以占据多少个单位。我一开始打算用Grid来设计，所以先看了部分Grid的资料。antd栅格是仿bootstrap的，可以看一下bootstrap对于响应式设计的介绍<a target="_blank" rel="noopener" href="https://getbootstrap.com/docs/3.4/css/%EF%BC%8C%E6%A0%B9%E6%8D%AE%E4%BD%BF%E7%94%A8%E8%AE%BE%E5%A4%87%E7%9A%84%E4%B8%8D%E5%90%8C%EF%BC%8C%E6%A0%B9%E6%8D%AE%E5%B1%8F%E5%B9%95%E5%A4%A7%E5%B0%8F%E5%B0%86%E5%AE%BD%E5%BA%A6%E5%88%86%E6%88%90%E4%BA%866%E4%B8%AA%E5%B0%BA%E5%AF%B8%EF%BC%9Axs">https://getbootstrap.com/docs/3.4/css/，根据使用设备的不同，根据屏幕大小将宽度分成了6个尺寸：xs</a>, sm, md, lg, xl, xxl根据这6个尺寸来设计col的span可以使得在不同的屏幕大小下每一列所占据的行的比例都不同，因为如果是电脑屏幕，你一行可以放置3个组件能够看清楚，但是手机屏幕也许就只能放一个了。下面是antd给出的代码示例:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;Row&gt;</span><br><span class="line">    &lt;Col xs=&#123;<span class="number">2</span>&#125; sm=&#123;<span class="number">4</span>&#125; md=&#123;<span class="number">6</span>&#125; lg=&#123;<span class="number">8</span>&#125; xl=&#123;<span class="number">10</span>&#125;&gt;</span><br><span class="line">   		Col<span class="number">-1</span></span><br><span class="line">    &lt;/Col&gt;</span><br><span class="line">    &lt;Col xs=&#123;<span class="number">20</span>&#125; sm=&#123;<span class="number">16</span>&#125; md=&#123;<span class="number">12</span>&#125; lg=&#123;<span class="number">8</span>&#125; xl=&#123;<span class="number">4</span>&#125;&gt;</span><br><span class="line">    	Col<span class="number">-2</span></span><br><span class="line">    &lt;/Col&gt;</span><br><span class="line">    &lt;Col xs=&#123;<span class="number">2</span>&#125; sm=&#123;<span class="number">4</span>&#125; md=&#123;<span class="number">6</span>&#125; lg=&#123;<span class="number">8</span>&#125; xl=&#123;<span class="number">10</span>&#125;&gt;</span><br><span class="line">    	Col<span class="number">-3</span></span><br><span class="line">    &lt;/Col&gt;</span><br><span class="line">&lt;/Row&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="List响应式设计"><a href="#List响应式设计" class="headerlink" title="List响应式设计"></a>List响应式设计</h2><p>List的响应式设计和Grid的区别不大其实，一言以蔽之就是Grid是根据屏幕的大小调整每一列的宽度，而List是根据屏幕的宽度调整每一行可以放几个List.Item，可以把Grid看成更宽泛的List吧。下面是List的代码示例，也是我所用的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;List</span><br><span class="line">  grid=&#123;&#123;</span><br><span class="line">    gutter: <span class="number">16</span>,</span><br><span class="line">    xs: <span class="number">1</span>,</span><br><span class="line">    sm: <span class="number">2</span>,</span><br><span class="line">    md: <span class="number">2</span>,</span><br><span class="line">    lg: <span class="number">3</span>,</span><br><span class="line">    xl: <span class="number">3</span>,</span><br><span class="line">    xxl: <span class="number">4</span>,</span><br><span class="line">  &#125;&#125;</span><br><span class="line">  dataSource=&#123;data&#125;</span><br><span class="line">  renderItem=&#123;<span class="function"><span class="params">item</span> =&gt;</span> (</span><br><span class="line">    &lt;List.Item&gt;</span><br><span class="line">      &lt;Card title=&#123;item.title&#125;&gt;Card content&lt;/Card&gt;</span><br><span class="line">    &lt;/List.Item&gt;</span><br><span class="line">  )&#125;</span><br><span class="line">/&gt;,</span><br></pre></td></tr></table></figure>
+
+<h1 id="踩坑"><a href="#踩坑" class="headerlink" title="踩坑"></a>踩坑</h1><h2 id="宝塔-阿里云部署"><a href="#宝塔-阿里云部署" class="headerlink" title="宝塔+阿里云部署"></a>宝塔+阿里云部署</h2><p>我原来在部署的时候就碰到过这个问题，就是阿里云上已经开放了端口，但是还是不能访问。后来查了一下，是因为ubuntu本身的防火墙没有运行这个端口访问，正确的办法是除了阿里云安全组要添加端口，然后还要远程连接终端，通过指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -I INPUT -p tcp --dport 端口 -j ACCEPT</span><br></pre></td></tr></table></figure>
+
+<p>开放端口，然后</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables-save</span><br></pre></td></tr></table></figure>
+
+<p>保存。一般来说都是自带了iptables的，如果没有那就先安装一个。</p>
+<h2 id="Hook-UseState设置数组不刷新问题"><a href="#Hook-UseState设置数组不刷新问题" class="headerlink" title="Hook  UseState设置数组不刷新问题"></a>Hook  UseState设置数组不刷新问题</h2><p>这个以前也碰到过，就是如果你使用dva也好，useState也好，如果设置了某个state是数组，当你使用useState的时候并不会刷新组件。然后查阅了一些资料，解决方法就是使用slice函数，数组的浅拷贝方法，返回一个新的数组，用这个slice得到的新数组去setState才会引发刷新</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setArr(arr.slice())</span><br></pre></td></tr></table></figure>
+
+<p>引用一些资料：</p>
+<blockquote>
+<p>查看文档发现一句话useState里数据务必为immutable （不可赋值的对象）<br>也就是ass component的state也提倡使用immutable数据，但不是强制的，因为只要调用了setState就会触发更新。所以再class组件中没有出现这种问题，或者通过改变为空再赋值是可以触发更新的。<br>但是再使用useState时，如果在更新函数里传入同一个对象时将无法触发更新。<br>于是解决思路就是通过slice() 返回一个新的对象去赋值是解决问题的关键。</p>
+</blockquote>
+<h2 id="杂七杂八"><a href="#杂七杂八" class="headerlink" title="杂七杂八"></a>杂七杂八</h2><p>在umi build之前记得在配置文件里加一行这个</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">publicPath: <span class="string">&#x27;./&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>设置antd的主题颜色的配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">theme: &#123;</span><br><span class="line">    <span class="string">&#x27;primary-color&#x27;</span>: <span class="string">&#x27;#e74c3c&#x27;</span>,</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>JS声明一个长度为10并且全部填充为0的数组：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = <span class="built_in">Array</span>(<span class="number">10</span>).fill(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>js生成min到max的随机数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// max - 期望的最大值</span></span><br><span class="line"><span class="comment">// min - 期望的最小值</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="built_in">Math</span>.random()*(max-min+<span class="number">1</span>)+min,<span class="number">10</span>);</span><br><span class="line"><span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random()*(max-min+<span class="number">1</span>)+min);</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/20/canvas-video%E5%AE%9E%E7%8E%B0%E8%A7%86%E9%A2%91%E6%88%AA%E5%9B%BE%E6%80%BB%E7%BB%93/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -604,7 +697,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
