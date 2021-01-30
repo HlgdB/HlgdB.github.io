@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="对随访系统遇到过的难点做一个复习和总结。 实验室检查 实验室检查从血常规，血生化到肿瘤标志物，一共有9个表单，其中除了尿常规没有单位这一列，其他的列名都是一样的。所以完全可以只设计一个BasicTable来作为9个检查表单的基本表，然后处理好内部的数据逻辑即可。这样子处理的好处是大大减少了代码量，增加了代码可重用性。但是也有缺点，一个表格要处理9个表单的数据，这个表格的内部数据逻辑处理会特别复杂，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FUS随访系统总结">
+<meta property="og:url" content="http://example.com/2021/01/30/FUS%E9%9A%8F%E8%AE%BF%E7%B3%BB%E7%BB%9F%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="对随访系统遇到过的难点做一个复习和总结。 实验室检查 实验室检查从血常规，血生化到肿瘤标志物，一共有9个表单，其中除了尿常规没有单位这一列，其他的列名都是一样的。所以完全可以只设计一个BasicTable来作为9个检查表单的基本表，然后处理好内部的数据逻辑即可。这样子处理的好处是大大减少了代码量，增加了代码可重用性。但是也有缺点，一个表格要处理9个表单的数据，这个表格的内部数据逻辑处理会特别复杂，">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-01-30T03:23:39.000Z">
+<meta property="article:modified_time" content="2021-01-30T04:56:17.307Z">
+<meta property="article:author" content="HlgdB">
+<meta property="article:tag" content="前端学习">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/01/30/FUS%E9%9A%8F%E8%AE%BF%E7%B3%BB%E7%BB%9F%E6%80%BB%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>FUS随访系统总结 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/30/FUS%E9%9A%8F%E8%AE%BF%E7%B3%BB%E7%BB%9F%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="HlgdB">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          FUS随访系统总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-30 11:23:39 / Modified: 12:56:17" itemprop="dateCreated datePublished" datetime="2021-01-30T11:23:39+08:00">2021-01-30</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>对随访系统遇到过的难点做一个复习和总结。</p>
+<h1 id="实验室检查"><a href="#实验室检查" class="headerlink" title="实验室检查"></a>实验室检查</h1><ol>
+<li><p>实验室检查从血常规，血生化到肿瘤标志物，一共有9个表单，其中除了尿常规没有单位这一列，其他的列名都是一样的。所以完全可以只设计一个BasicTable来作为9个检查表单的基本表，然后处理好内部的数据逻辑即可。这样子处理的好处是大大减少了代码量，增加了代码可重用性。但是也有缺点，一个表格要处理9个表单的数据，这个表格的内部数据逻辑处理会特别复杂，会有很多的switch语句，并且model的state肯定也会比较庞大。举个例子，表格的完成按钮肯定是触发一个dispatch，但是根据现在所处的表单的不同，表格的dispatch的type肯定也不一样，所以就要9个不同的表单对应9个不同的提交事件。所以要有一个唯一标识确定现在处于哪个表单，原来是使用tabs来分隔各个表单的，所以将tabs的title作为一个页面的state，传入表格中作为表格的一个参数即可，用这个title来确定处于哪个表单。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> (title) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;血常规&#x27;</span>:</span><br><span class="line">        ...</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;血生化&#x27;</span>:</span><br><span class="line">    	...</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实验室检查还有一个棘手的组件，临床意义判断这一列，需要有一个单选框，正常或是异常，选择异常后，又要可以弹出5个异常等级单选框。并且甲方给的需求是，可以只选正常或只选异常，并且可以只选异常不选异常等级，选择异常等级后，异常还是要处于被选中状态。我记得当时这个给我造成了蛮大的麻烦。我当时是自己封装了一个IsNormalRadios组件来处理这一列的。因为整个表格是这样封装的</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Form</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">table</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">tbody</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">td</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">Form.Item</span>&gt;</span></span><br><span class="line">                        ...</span><br><span class="line">                    <span class="tag">&lt;/<span class="name">Form.Item</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">tbody</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>正常和异常，5个异常等级，肯定是得分开的，也就是要有两个Radios，但是Form.Item里面有2个antd组件用于提交数据就会什么都没有，值传不出的。后来是把正常异常的Radios放到Item外面，然后设置两个state分别来处理两组Radios，因为异常等级这组Radios本来就在Item里，所以不用管，但是正常异常这组Radios如果发生value的改变，就需要添加一个函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">form.setFieldsValue(&#123;&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>把临床意义判断这个Item的value手动设置一下。同样的，在获取到数据初始化表格的时候，也要用useEffect来初始化这两组Radios的状态。如果value是0，那就标记正常，如果是-1，就仅仅标记异常，如果是其他大于0的，既要标记异常，又要标记异常等级。弹出问题很好解决，也是平时在编码中用得很多的一种方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">style=&#123;&#123; <span class="attr">display</span>: state1 === <span class="number">-1</span> ? <span class="string">&#x27;block&#x27;</span> : <span class="string">&#x27;none&#x27;</span> &#125;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>loading的处理，因为9个表单对应的model中fetch数据的Effect不同，所以在mapStateToProps里对应的loading也不一样，一共会有九个loading，解决办法就是设置一个state loading，用useEffect在不同的表单把state loading设置成对应的那个，然后用state loading来控制Spin。</p>
+</li>
+</ol>
+<h1 id="其他检查"><a href="#其他检查" class="headerlink" title="其他检查"></a>其他检查</h1><p>这里主要是记录一下对antd的日期组件的处理方法，antd的DatePicker组件直接传的value不是xx-xx-xx这种格式的，而数据库要存只能存这种日期格式，所以在上传数据和获取数据初始化表的时候都要经过处理。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> moment <span class="keyword">from</span> <span class="string">&#x27;moment&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置表单时</span></span><br><span class="line">form.setFieldsValue(&#123;</span><br><span class="line">    ...otherExam,</span><br><span class="line">    ECGDetTime: otherExam.ECGDetTime ? moment(otherExam.ECGDetTime) : <span class="literal">null</span>,</span><br><span class="line">    UCGDetTime: otherExam.UCGDetTime ? moment(otherExam.UCGDetTime) : <span class="literal">null</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 提交数据时</span></span><br><span class="line">values.ECGDetTime = values.ECGDetTime ? values.ECGDetTime.format(<span class="string">&#x27;YYYY-MM-DD&#x27;</span>) : <span class="literal">null</span>;</span><br><span class="line">values.UCGDetTime = values.UCGDetTime ? values.UCGDetTime.format(<span class="string">&#x27;YYYY-MM-DD&#x27;</span>) : <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="分子检测"><a href="#分子检测" class="headerlink" title="分子检测"></a>分子检测</h1><ol>
+<li><p>封装了一个小组件，某个分子检测为阳性时，要在分子检测的Radios弹出3个组件，分别是这个分子的检测样本，检测方法和检测描述，隐藏和弹出还是用的老方法，这里主要是这个弹出的3个组件设置好包裹的Form.Item的name，不让数据混乱</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Form.Item</span> <span class="attr">label</span>=<span class="string">&quot;检测样本&quot;</span> <span class="attr">name</span>=<span class="string">&#123;</span>`$&#123;<span class="attr">name</span>&#125;<span class="attr">Sam</span>`&#125;&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Input</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Form.Item</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Form.Item</span> <span class="attr">label</span>=<span class="string">&quot;检测方法&quot;</span> <span class="attr">name</span>=<span class="string">&#123;</span>`$&#123;<span class="attr">name</span>&#125;<span class="attr">DetMed</span>`&#125;&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Select</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">width:</span> <span class="attr">120</span> &#125;&#125;&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Option</span> <span class="attr">value</span>=<span class="string">&#123;1&#125;</span>&gt;</span>ARMS<span class="tag">&lt;/<span class="name">Option</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Option</span> <span class="attr">value</span>=<span class="string">&#123;2&#125;</span>&gt;</span>FISH<span class="tag">&lt;/<span class="name">Option</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Option</span> <span class="attr">value</span>=<span class="string">&#123;3&#125;</span>&gt;</span>NGS<span class="tag">&lt;/<span class="name">Option</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Form.Item</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Form.Item</span> <span class="attr">label</span>=<span class="string">&quot;检测描述&quot;</span> <span class="attr">name</span>=<span class="string">&#123;</span>`$&#123;<span class="attr">name</span>&#125;<span class="attr">Desc</span>`&#125;&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Input</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Form.Item</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用antd的Switch组件来控制其他组件的disabled的状态。</p>
+</li>
+</ol>
+<h1 id="症状体征，副反应，其他检查-影像学检查"><a href="#症状体征，副反应，其他检查-影像学检查" class="headerlink" title="症状体征，副反应，其他检查-影像学检查"></a>症状体征，副反应，其他检查-影像学检查</h1><p>这3个表单有一个共同点，就是都是不定长的，就是可以添加或者删除组数据，但是每一组也就是每一行的数据格式都是一样的，即要用到的组件都是一样的。后面还有一个和这个比较像的随访检查也是这种表单，但是我用了两种不同的处理方式。先说这里的，主要是要确认思路，既然每一行的组件都是一样，那就把行封装成组件，然后按行来渲染组件。后端传过来的数是数组，数组的每一个元素就是一行的数据。这里就要用到一个非常非常好用的函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.prototype.map(提供函数)</span><br></pre></td></tr></table></figure>
+
+<p>map方法是创建一个新数组，结果是每个元素调用一次提供的函数后返回的结果。所以map括号中提供的函数可以获得一个参数item，就是数组的元素，我们将封装好的行组件叫做ImageExamRow，给他设置一个参数rowData，用于初始化ImageExamRow中的组件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    &#123;data?.map((item: any) =&gt; &#123;</span><br><span class="line">    return item !== undefined ? <span class="tag">&lt;<span class="name">ImageExamRow</span> <span class="attr">rowData</span>=<span class="string">&#123;item&#125;</span> /&gt;</span> : null;</span><br><span class="line">    &#125;)&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的data是后端返回的数组数据。这样就渲染好了每一行，在将这个div用table层层包裹起来。这里不能用一个统一的Form了，因为每一行的组件都是一样的，如果都用一样的Form.item的name那肯定会混乱的，如果都用不同的name那更不行，后端就不方便处理数据了。所以每一行都有单独的Form。</p>
+<p>然后设计好newMember函数，就是新建行。我们整个组件有一个state data是用来记录整个表单现在的数据的，肯定是数组形式，新建一行时，我们只需要新建一个格式相同的object，把每个key的value填充成undefined，然后push进这个数组，然后传给后端让后端授予一个id即可。这样state改变了，也会重新渲染一遍表格，添加了新的一行。删除就毋庸赘述了，根据key来删除就可以。</p>
+<h1 id="随访信息"><a href="#随访信息" class="headerlink" title="随访信息"></a>随访信息</h1><p>前面提到的，随访信息也是和前面比较一样的数据格式，数组而不是一个对象了。但是前面的我都是用原生的table自己封装的组件，但是这个随访信息有点点不一样，它每一行得加个序号，这对我原来的那个table来说是个不小的麻烦，因为后端给的数据中，key值并不是按顺序来的。跟数据库有关系，数据库删除一行后，并不会保留这一行的序号，再添加就是直接跳过往后添加了。所以我尝试用antd 的Table来处理。</p>
+<p>我感觉antd的Table和我自己封装的组件就是两种完全不同的处理方式，我是以行为单位，设计好行组件，再用map函数渲染每一行。而antd的Table则是以列为单位，在Table的参数columns中设计好每一列的处理和渲染。columns主要是设计好render这个key，render对应的value是一个函数，返回值必须是jsx组件，淡然如果不需要处理直接返回（JSX）这样也可以。如果用函数的话，这里提供了一系列参数，text，record和index。text是文本，有时候提供的数据就是纯文本的话，直接用text渲染就行。record是Table的另一个参数dataSource数据数组提供给每一列的数据，这里定位到每一列是通过key来定位的。index就是我需要的，序号，不过index是从0开始的，用作序号的话要记得加一。</p>
+<p>了解这些基本信息后，就可以设计好每一列了。这里有个巨坑，初始化antd的组件时，一定要拿数据设置value这个参数而不是去设置defaultValue参数，不然的话你删除的时候，删除一行，已经删除的那一行数据会直接往上填充，也就是删除的行数据会代替它原来上一行的数据。然后新增和删除倒是和另一种处理方法比较像，然后这里因为没有用Form包裹，所以要获得每一个组件的value只能使用onChange，就是只要组件的value发生改变就要记录一次，记录到自己定义的数组里就可以，最后用于提交。但是你定义的那个用于记录和提交的数组不能设置成state，不然会陷入更改刷新的循环，就用const定义就可以。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> columns = [</span><br><span class="line">    &#123;</span><br><span class="line">      title: <span class="string">&#x27;序号&#x27;</span>,</span><br><span class="line">      dataIndex: <span class="string">&#x27;key&#x27;</span>,</span><br><span class="line">      key: <span class="string">&#x27;key&#x27;</span>,</span><br><span class="line">      align: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">      width: <span class="number">80</span>,</span><br><span class="line">      render: <span class="function">(<span class="params">text: any, record: any, index: any</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// console.log(record);</span></span><br><span class="line">        <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">span</span>&gt;</span>&#123;index + 1&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span>;</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      title: <span class="string">&#x27;随访日期&#x27;</span>,</span><br><span class="line">      dataIndex: <span class="string">&#x27;date&#x27;</span>,</span><br><span class="line">      key: <span class="string">&#x27;date&#x27;</span>,</span><br><span class="line">      align: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">      width: <span class="number">175</span>,</span><br><span class="line">      render: <span class="function">(<span class="params">text: any, record: any</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">          &lt;DateGrid</span><br><span class="line">            value=&#123;record.date ? moment(record.date, <span class="string">&#x27;YYYY-MM-DD&#x27;</span>) : <span class="literal">undefined</span>&#125;</span><br><span class="line">            id=&#123;record.id&#125;</span><br><span class="line">            name=<span class="string">&quot;date&quot;</span></span><br><span class="line">          /&gt;</span><br><span class="line">        );</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      title: <span class="string">&#x27;随访方式&#x27;</span>,</span><br><span class="line">      dataIndex: <span class="string">&#x27;folMet&#x27;</span>,</span><br><span class="line">      key: <span class="string">&#x27;folMet&#x27;</span>,</span><br><span class="line">      align: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">      width: <span class="number">175</span>,</span><br><span class="line">      render: <span class="function">(<span class="params">text: any, record: any</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// console.log(&#x27;record.folMet&#x27;, record.folMet);</span></span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">          &lt;SelectGrid</span><br><span class="line">            options=&#123;fw_Options&#125;</span><br><span class="line">            value=&#123;record.folMet ? record.folMet : <span class="literal">null</span>&#125;</span><br><span class="line">            id=&#123;record.id&#125;</span><br><span class="line">            name=<span class="string">&quot;folMet&quot;</span></span><br><span class="line">          /&gt;</span><br><span class="line">        );</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      title: <span class="string">&#x27;疗效评估&#x27;</span>,</span><br><span class="line">      dataIndex: <span class="string">&#x27;effEva&#x27;</span>,</span><br><span class="line">      key: <span class="string">&#x27;effEva&#x27;</span>,</span><br><span class="line">      align: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">      width: <span class="number">175</span>,</span><br><span class="line">      render: <span class="function">(<span class="params">text: any, record: any</span>) =&gt;</span> (</span><br><span class="line">        &lt;SelectGrid</span><br><span class="line">          options=&#123;re_Options&#125;</span><br><span class="line">          value=&#123;record.effEva ? record.effEva : <span class="literal">undefined</span>&#125;</span><br><span class="line">          id=&#123;record.id&#125;</span><br><span class="line">          name=<span class="string">&quot;effEva&quot;</span></span><br><span class="line">        /&gt;</span><br><span class="line">      ),</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      title: <span class="string">&#x27;生存状态&#x27;</span>,</span><br><span class="line">      dataIndex: <span class="string">&#x27;livSta&#x27;</span>,</span><br><span class="line">      key: <span class="string">&#x27;livSta&#x27;</span>,</span><br><span class="line">      align: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">      width: <span class="number">175</span>,</span><br><span class="line">      render: <span class="function">(<span class="params">text: any, record: any</span>) =&gt;</span> (</span><br><span class="line">        &lt;&gt;</span><br><span class="line">          &lt;SelectGrid</span><br><span class="line">            value=&#123;record.livSta ? record.livSta : <span class="literal">undefined</span>&#125;</span><br><span class="line">            options=&#123;ls_Options&#125;</span><br><span class="line">            id=&#123;record.id&#125;</span><br><span class="line">            name=<span class="string">&quot;livSta&quot;</span></span><br><span class="line">            dieDate=&#123;record.dieDate&#125;</span><br><span class="line">          /&gt;</span><br><span class="line">        &lt;/&gt;</span><br><span class="line">      ),</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      title: <span class="string">&#x27;影像类型&#x27;</span>,</span><br><span class="line">      dataIndex: <span class="string">&#x27;imaFilType&#x27;</span>,</span><br><span class="line">      key: <span class="string">&#x27;imaFilType&#x27;</span>,</span><br><span class="line">      align: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">      width: <span class="number">175</span>,</span><br><span class="line">      render: <span class="function">(<span class="params">text: any, record: any</span>) =&gt;</span> (</span><br><span class="line">        &lt;SelectGrid</span><br><span class="line">          options=&#123;it_Options&#125;</span><br><span class="line">          value=&#123;record.imaFilType ? record.imaFilType : <span class="literal">undefined</span>&#125;</span><br><span class="line">          id=&#123;record.id&#125;</span><br><span class="line">          name=<span class="string">&quot;imaFilType&quot;</span></span><br><span class="line">        /&gt;</span><br><span class="line">      ),</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      title: <span class="string">&#x27;影像&#x27;</span>,</span><br><span class="line">      dataIndex: <span class="string">&#x27;savFilPath&#x27;</span>,</span><br><span class="line">      key: <span class="string">&#x27;savFilPath&#x27;</span>,</span><br><span class="line">      align: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">      width: <span class="number">175</span>,</span><br><span class="line">      render: <span class="function">(<span class="params">text: any, record: any</span>) =&gt;</span> <span class="xml"><span class="tag">&lt;<span class="name">FileTable</span> <span class="attr">pid</span>=<span class="string">&#123;pid&#125;</span> <span class="attr">folder</span>=<span class="string">&quot;follInfo&quot;</span> <span class="attr">id</span>=<span class="string">&#123;record.id&#125;</span> /&gt;</span></span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      title: <span class="string">&#x27;备注&#x27;</span>,</span><br><span class="line">      dataIndex: <span class="string">&#x27;remarks&#x27;</span>,</span><br><span class="line">      align: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">      width: <span class="number">190</span>,</span><br><span class="line">      render: <span class="function">(<span class="params">text: any, record: any</span>) =&gt;</span> (</span><br><span class="line">        &lt;TextArea</span><br><span class="line">          value=&#123;record.remarks ? record.remarks : <span class="literal">undefined</span>&#125;</span><br><span class="line">          onInput=&#123;<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">            onChange(record.id, <span class="string">&#x27;remarks&#x27;</span>, e.target.value);</span><br><span class="line">          &#125;&#125;</span><br><span class="line">        /&gt;</span><br><span class="line">      ),</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      title: <span class="string">&#x27;操作&#x27;</span>,</span><br><span class="line">      dataIndex: <span class="string">&#x27;operation&#x27;</span>,</span><br><span class="line">      align: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">      width: <span class="number">80</span>,</span><br><span class="line">      render: <span class="function">(<span class="params">text: any, record: any</span>) =&gt;</span></span><br><span class="line">        data.length &gt;= <span class="number">1</span> ? (</span><br><span class="line">          &lt;span&gt;</span><br><span class="line">            &lt;Popconfirm title=<span class="string">&quot;确认删除（不可恢复）？&quot;</span> onConfirm=&#123;<span class="function">() =&gt;</span> handleDelete(record.id)&#125;&gt;</span><br><span class="line">              &lt;a&gt;删除&lt;/a&gt;</span><br><span class="line">            &lt;/Popconfirm&gt;</span><br><span class="line">          &lt;/span&gt;</span><br><span class="line">        ) : <span class="literal">null</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  ];</span><br></pre></td></tr></table></figure>
+
+<p>这里的SelectGrid是我自己封装的组件，因为随访信息每一行的组件大部分都是选择框，所以可以设计一个组件封装一下，只要改变一下SelectGrid的props就又是一个新的Select，这个思想跟前面的实验室检查的设计差不多吧。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" rel="tag"># 前端学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/25/%E8%AE%B0%E5%BD%95%E4%B8%80%E4%B8%8B%E5%B8%AE%E5%A6%B9%E5%A6%B9%E5%86%99%E7%9A%84%E4%B8%80%E4%B8%AA%E5%AF%92%E5%81%87%E4%BD%9C%E4%B8%9A%E5%B0%8F%E7%BD%91%E9%A1%B5/" rel="prev" title="记录一下帮妹妹写的一个寒假作业小网页">
+      <i class="fa fa-chevron-left"></i> 记录一下帮妹妹写的一个寒假作业小网页
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E5%AE%A4%E6%A3%80%E6%9F%A5"><span class="nav-number">1.</span> <span class="nav-text">实验室检查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%A3%80%E6%9F%A5"><span class="nav-number">2.</span> <span class="nav-text">其他检查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%AD%90%E6%A3%80%E6%B5%8B"><span class="nav-number">3.</span> <span class="nav-text">分子检测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%97%87%E7%8A%B6%E4%BD%93%E5%BE%81%EF%BC%8C%E5%89%AF%E5%8F%8D%E5%BA%94%EF%BC%8C%E5%85%B6%E4%BB%96%E6%A3%80%E6%9F%A5-%E5%BD%B1%E5%83%8F%E5%AD%A6%E6%A3%80%E6%9F%A5"><span class="nav-number">4.</span> <span class="nav-text">症状体征，副反应，其他检查-影像学检查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9A%8F%E8%AE%BF%E4%BF%A1%E6%81%AF"><span class="nav-number">5.</span> <span class="nav-text">随访信息</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">HlgdB</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HlgdB</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
